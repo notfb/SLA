@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Simple bean for testing of class level annotation by extending an annotated class.
  */
-@SLA(error=300, warn=200, unit= TimeUnit.MILLISECONDS)
 public class ClassAnnotatedChildBean extends ClassAnnotatedBean {
 
     public void childOk() {
@@ -27,6 +26,7 @@ public class ClassAnnotatedChildBean extends ClassAnnotatedBean {
 		// do nothing
 	}
 
+    // should not trigger an error -> child not annotated
     @Override
     public void warn() throws InterruptedException {
 		Thread.sleep(240);

@@ -1,9 +1,6 @@
 package fb.local.sla;
 
-import etm.core.renderer.SimpleTextRenderer;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -11,12 +8,12 @@ import javax.annotation.Resource;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test class level annotation.
+ * Test non-annotated subclass of an annotated class.
  */
-public class ClassAnnotatedTest extends MeasurementTest {
+public class ClassAnnotatedChildTest extends MeasurementTest {
 
-	@Resource(name = "classAnnotatedBean")
-	protected ClassAnnotatedBean monitoredBean;
+	@Resource(name = "classAnnotatedChildBean")
+	protected ClassAnnotatedChildBean monitoredBean;
 
     @Before
     public void checkNoWarnError() {
@@ -33,13 +30,10 @@ public class ClassAnnotatedTest extends MeasurementTest {
 
 	@Test
 	public void testWarn() throws InterruptedException {
+        // overridden ... no annotation
 		monitoredBean.warn();
 		assertEquals(0, measurementAspect.getErrors());
-		assertEquals(1, measurementAspect.getWarnings());
-
-		monitoredBean.warn();
-		assertEquals(0, measurementAspect.getErrors());
-		assertEquals(2, measurementAspect.getWarnings());
+		assertEquals(0, measurementAspect.getWarnings());
 	}
 
 	@Test
@@ -51,6 +45,27 @@ public class ClassAnnotatedTest extends MeasurementTest {
 		monitoredBean.error();
 		assertEquals(0, measurementAspect.getWarnings());
 		assertEquals(2, measurementAspect.getErrors());
+	}
+
+    @Test
+	public void testChildWarn() throws InterruptedException {
+        monitoredBean.childWarn();
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+	}
+
+    @Test
+	public void testChildOk() throws InterruptedException {
+        monitoredBean.childOk();
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+	}
+
+    @Test
+	public void testChildError() throws InterruptedException {
+        monitoredBean.childOk();
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
 	}
 
 }

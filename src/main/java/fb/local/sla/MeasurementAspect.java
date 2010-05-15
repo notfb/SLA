@@ -250,7 +250,7 @@ public class MeasurementAspect implements InitializingBean {
         if (logger.isDebugEnabled()) {
             logger.debug("getSLAUncachedFromClass - using class " + clazz.getName());
         }
-        final Annotation[] annotations = clazz.getAnnotations();
+        final Annotation[] annotations = clazz.getDeclaredAnnotations();
         SLAValues slaValues = null;
 
         for (Annotation a : annotations) {
