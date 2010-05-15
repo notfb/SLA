@@ -1,5 +1,5 @@
-First draft of an simple @SLA Annotation for java
-See javadoc for more informations.
+A simple @SLA Annotation for java.
+See javadoc for more information.
 
 
 Credits to 
@@ -10,3 +10,5 @@ There is some code based on http://www.javaconcurrencyinpractice.com/
 as well ...
 
 My code is licensed under Apache 2.0 http://www.apache.org/licenses/LICENSE-2.0.html
+
+This code is still beta -> Don't blame me if it breaks anything!
