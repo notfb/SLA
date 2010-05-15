@@ -18,19 +18,6 @@ public class MethodAnnotatedTest extends MeasurementTest {
 	@Resource(name = "methodAnnotatedBean")
 	protected MethodAnnotatedBean monitoredBean;
 
-    @Before
-	public void setUp() throws Exception {
-		measurementAspect.reset();
-		assertEquals(0, measurementAspect.getErrors());
-		assertEquals(0, measurementAspect.getWarnings());
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		etmMonitor.render(new SimpleTextRenderer());
-		etmMonitor.reset();
-	}
-
 	@Test
 	public void testOk() {
 		monitoredBean.ok();
