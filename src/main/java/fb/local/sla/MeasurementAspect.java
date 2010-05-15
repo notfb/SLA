@@ -243,8 +243,7 @@ public class MeasurementAspect implements InitializingBean {
 				+ pjp.getStaticPart());
 		Signature sig = pjp.getSignature();
 		if (sig instanceof MethodSignature) {
-			Method method = ((MethodSignature) sig).getMethod();
-			return method;
+			return ((MethodSignature) sig).getMethod();
 		} else {
 			String name = sig.getClass().getName();
 			logger.error("unsupported signature type : " + name);

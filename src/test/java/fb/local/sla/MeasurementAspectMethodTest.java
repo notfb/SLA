@@ -19,11 +19,11 @@ import etm.core.renderer.SimpleTextRenderer;
 
 /**
  * Only tests SLA annotated methods, a class annotation is tested in
- * ClassAnnotationTest.
+ * MeasurementAspectClassTest.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "testSLAContext.xml" })
-public class MeasurementAspectTest {
+public class MeasurementAspectMethodTest {
 
 	/** Minimum accuracy (or delta) for double operations */
 	private static final double MIN_ACC = 0.00001d;
@@ -38,7 +38,7 @@ public class MeasurementAspectTest {
 
 	@Before
 	public void setUp() throws Exception {
-		etmMonitor.start();
+		//etmMonitor.start();
 		slaMonitorBean.reset();
 		assertEquals(0, slaMonitorBean.getErrors());
 		assertEquals(0, slaMonitorBean.getWarnings());
@@ -47,7 +47,7 @@ public class MeasurementAspectTest {
 	@After
 	public void tearDown() throws Exception {
 		etmMonitor.render(new SimpleTextRenderer());
-		etmMonitor.stop();
+		//etmMonitor.stop();
 		etmMonitor.reset();
 	}
 

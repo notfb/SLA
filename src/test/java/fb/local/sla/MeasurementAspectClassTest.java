@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/testSlaContext.xml" })
 @Ignore
-public class ClassAnnotationTest extends MeasurementAspectTest {
+public class MeasurementAspectClassTest extends MeasurementAspectMethodTest {
 
 	@Resource
 	private ClassAnnotatedBean classAnnotatedBean;
@@ -23,7 +23,7 @@ public class ClassAnnotationTest extends MeasurementAspectTest {
 		assertEquals(0, slaMonitorBean.getErrors());
 		assertEquals(0, slaMonitorBean.getWarnings());
 
-		classAnnotatedBean.childMethod();
+		classAnnotatedBean.childMethodWarn();
 		assertEquals(0, slaMonitorBean.getErrors());
 		assertEquals(1, slaMonitorBean.getWarnings());
 	}

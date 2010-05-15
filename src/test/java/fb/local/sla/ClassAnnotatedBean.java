@@ -7,8 +7,16 @@ import java.util.concurrent.TimeUnit;
  */
 @SLA(error=200, warn=100, unit=TimeUnit.MILLISECONDS)
 public class ClassAnnotatedBean extends AnnotatedBean {
-	
-	public void childMethod() throws InterruptedException {
+
+    public void childMethodOk() throws InterruptedException {
 		Thread.sleep(140);
+	}
+
+	public void childMethodWarn() throws InterruptedException {
+		Thread.sleep(140);
+	}
+
+    public void childMethodError() throws InterruptedException {
+		Thread.sleep(250);
 	}
 }
