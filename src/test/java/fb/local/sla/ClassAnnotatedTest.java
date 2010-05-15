@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Only tests SLA annotated methods.
  */
-@Ignore("TODO: impl.")
+//@Ignore("TODO: impl.")
 public class ClassAnnotatedTest extends MeasurementTest {
 
 	@Resource(name = "classAnnotatedBean")

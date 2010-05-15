@@ -132,6 +132,7 @@ public class MeasurementAspect implements InitializingBean {
 	}
 
 	@Around("@annotation(SLA)")
+    //@Around("execution(* *(..)) && (within(@SLA *) || @annotation(SLA))")
 	public Object monitor(ProceedingJoinPoint pjp) throws Throwable {
 
 		EtmPoint point = null;
@@ -149,21 +150,44 @@ public class MeasurementAspect implements InitializingBean {
 		try {
 			return pjp.proceed();
 		} finally {
-			if (point != null && sla != null) {
-				point.collect();
-				double timeMs = point.getTransactionTime();
-				checkSLA(sla.warnMs, sla.errorMs, sla.name, timeMs);
-			}
-		}
+            collectPoint(point, sla);
+        }
 
 	}
 
-//    @Around("@annotation(SLA)")
-//	public Object monitorClass(ProceedingJoinPoint pjp) throws Throwable {
-//        logger.debug("monitorClass pjp= " + pjp);
-//
-//        return null;
-//	}
+    @Around("execution(* *(..)) && within(@SLA *)")
+	public Object monitorClass(ProceedingJoinPoint pjp) throws Throwable {
+        if (logger.isDebugEnabled()) {
+            logger.debug("monitorClass(...) pjp = " + pjp);
+        }
+
+        EtmPoint point = null;
+		SLAValues sla = null;
+        
+        try {
+            // TODO: use cache!
+			sla = getSLAUncachedFromClass(pjp);
+			point = etmMonitor.createPoint(sla.name);
+		} catch (RuntimeException e) {
+			logger.warn("Caught exception within AOP advice measurement code",
+					e);
+			// yes, eat exception to avoid causing errors in the "real" system
+		}
+
+		try {
+			return pjp.proceed();
+		} finally {
+            collectPoint(point, sla);
+        }
+	}
+
+    protected void collectPoint(EtmPoint point, SLAValues sla) {
+        if (point != null && sla != null) {
+            point.collect();
+            double timeMs = point.getTransactionTime();
+            checkSLA(sla.warnMs, sla.errorMs, sla.name, timeMs);
+        }
+    }
 
 	protected SLAValues getSLA(ProceedingJoinPoint pjp) {
 		try {
@@ -203,7 +227,51 @@ public class MeasurementAspect implements InitializingBean {
 		return slaValues;
 	}
 
-	private String mkPointName(Class<?> clazz, Method method) {
+    // TODO: unifiy with getSLA
+    protected SLAValues getSLAFromClass(ProceedingJoinPoint pjp) {
+		try {
+            // FIXME: calls clousure defined in cache ...
+			return cache.compute(pjp);
+		} catch (InterruptedException e) {
+			logger.info("interrupted while searching SLA annotation for "
+					+ "join point", e);
+			return getSLAUncachedFromClass(pjp);
+		}
+	}
+
+    // TODO: unifiy with getSLAUncached!
+    protected SLAValues getSLAUncachedFromClass(ProceedingJoinPoint pjp) {
+        final String pjpName = pjp.toLongString();
+        if (logger.isDebugEnabled()) {
+            logger.debug("getSLAUncachedFromClass(" + pjpName + ")");
+        }
+
+        final Class<?> clazz = pjp.getSignature().getDeclaringType();
+        if (logger.isDebugEnabled()) {
+            logger.debug("getSLAUncachedFromClass - using class " + clazz.getName());
+        }
+        final Annotation[] annotations = clazz.getAnnotations();
+        SLAValues slaValues = null;
+
+        for (Annotation a : annotations) {
+            if (a instanceof SLA) {
+                String pointName = mkPointName(clazz, getTargetMethod(pjp));
+                slaValues = getSLAValues((SLA) a, pointName);
+            }
+        }
+
+        if (slaValues == null) {
+            logger.error("FAILED to locate class level @SLA annotation for join "
+                    + "point method -  join point: " + pjpName);
+        } else if (slaValues.warnMs > slaValues.errorMs) {
+            logger.warn("@SLA with warning time > error time at join point "
+                    + pjpName);
+        }
+
+        return slaValues;
+    }
+
+    private String mkPointName(Class<?> clazz, Method method) {
 		final StringBuilder sb = new StringBuilder(clazz.getSimpleName());
 		sb.append('.').append(method.getName());
 		Class<?>[] types = method.getParameterTypes();
@@ -233,8 +301,10 @@ public class MeasurementAspect implements InitializingBean {
 	}
 
 	private Method getTargetMethod(ProceedingJoinPoint pjp) {
-		logger.debug("kind=" + pjp.getKind() + ", static="
-				+ pjp.getStaticPart());
+        if (logger.isDebugEnabled()) {
+		    logger.debug("kind=" + pjp.getKind() + ", static="
+				    + pjp.getStaticPart());
+        }
 		Signature sig = pjp.getSignature();
 		if (sig instanceof MethodSignature) {
 			return ((MethodSignature) sig).getMethod();
