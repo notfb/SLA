@@ -158,18 +158,6 @@ public class MeasurementAspect implements InitializingBean {
 
 	}
 
-	// private SLAValues getSLA(ProceedingJoinPoint pjp) {
-	// final String pjpName = pjp.toLongString();
-	// SLAValues val = cache.get(pjpName);
-	// if (val != null) {
-	// return val;
-	// }
-	// // Note: minor race here, does'nt matter getSLAUncached is idempotent
-	// val = getSLAUncached(pjp);
-	// cache.putIfAbsent(pjpName, val);
-	// return val;
-	// }
-
 	protected SLAValues getSLA(ProceedingJoinPoint pjp) {
 		try {
 			return cache.compute(pjp);
@@ -187,8 +175,6 @@ public class MeasurementAspect implements InitializingBean {
 		}
 
 		final Method method = getTargetMethod(pjp);
-		// FIXME: returns inherited annotations (javadoc says it does not)
-		// on a intel mac using java 1.6
 		final Annotation[] annotations = method.getDeclaredAnnotations();
 		SLAValues slaValues = null;
 
