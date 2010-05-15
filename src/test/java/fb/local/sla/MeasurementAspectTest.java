@@ -66,7 +66,7 @@ public class MeasurementAspectTest extends MeasurementTest {
 		assertEquals(1, measurementAspect.getErrors());
 		measurementAspect.reset();
 
-		// does'nt really make sense - warn > error
+		// does not really make sense - warn > error
 		measurementAspect.checkSLA(5000, 1000, "testStrange", 200.1);
 		assertEquals(0, measurementAspect.getWarnings());
 		assertEquals(0, measurementAspect.getErrors());

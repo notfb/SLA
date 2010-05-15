@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class MethodAnnotatedChildBean extends MethodAnnotatedBean {
 
     @SLA(error=200, warn=100, unit=TimeUnit.MILLISECONDS)
-    public void childMethodOk() throws InterruptedException {
+    public void childMethodOk() {
 		// do nothing
 	}
 
@@ -22,7 +22,7 @@ public class MethodAnnotatedChildBean extends MethodAnnotatedBean {
 		Thread.sleep(250);
 	}
 
-    public void childMethodNoSla() throws InterruptedException {
+    public void childMethodNoSla() {
 	    // do nothing
 	}
 

@@ -106,7 +106,7 @@ public class MeasurementAspect implements InitializingBean {
 	public void afterPropertiesSet() {
 		XmlEtmConfigurator.configure(MeasurementAspect.class
 				.getResourceAsStream(jetmConfig));
-		logger.info("initalized (from " + jetmConfig + ")");
+		logger.info("initialized (from " + jetmConfig + ")");
 	}
 
 	public String getJetmConfig() {

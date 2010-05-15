@@ -23,7 +23,7 @@ public abstract class MeasurementTest {
     @Resource
     protected MeasurementAspect measurementAspect;
     
-    protected EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
+    protected final EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
 
     @Before
 	public void setUp() throws Exception {
