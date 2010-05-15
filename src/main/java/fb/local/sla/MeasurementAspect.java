@@ -38,7 +38,8 @@ import etm.core.monitor.EtmPoint;
  * </p>
  * 
  * <pre>
- * TODO: class lvl annotation
+ * TODO: where to configure JETM? - atm it is in afterPropertiesSet()
+ * TODO: increase test coverage
  * TODO: aop xml config, hot deploy new spring context?
  * </pre>
  *
@@ -71,9 +72,6 @@ public class MeasurementAspect implements InitializingBean {
 
 	private final AtomicInteger warnings = new AtomicInteger(0);
 	private final AtomicInteger errors = new AtomicInteger(0);
-
-	// private final ConcurrentHashMap<String, SLAValues> cache = new
-	// ConcurrentHashMap<String, SLAValues>();
 
 	private final Memoizer<ProceedingJoinPoint, SLAValues, String> cache;
 
@@ -109,10 +107,12 @@ public class MeasurementAspect implements InitializingBean {
 		logger.info("initialized (from " + jetmConfig + ")");
 	}
 
+    /** Get the location of the JETM config file */
 	public String getJetmConfig() {
 		return jetmConfig;
 	}
 
+    /** Set the location of the JETM config file */
 	public void setJetmConfig(String jetmConfig) {
 		this.jetmConfig = jetmConfig;
 	}
@@ -131,7 +131,8 @@ public class MeasurementAspect implements InitializingBean {
 		return errors.get();
 	}
 
-	@Around("@annotation(SLA)")
+    // FIXME: unify advices to avoid matching twice!
+	@Around("@annotation(SLA) || (execution(* *(..)) && within(@SLA *))")
     //@Around("execution(* *(..)) && (within(@SLA *) || @annotation(SLA))")
 	public Object monitor(ProceedingJoinPoint pjp) throws Throwable {
 
@@ -153,32 +154,6 @@ public class MeasurementAspect implements InitializingBean {
             collectPoint(point, sla);
         }
 
-	}
-
-    @Around("execution(* *(..)) && within(@SLA *)")
-	public Object monitorClass(ProceedingJoinPoint pjp) throws Throwable {
-        if (logger.isDebugEnabled()) {
-            logger.debug("monitorClass(...) pjp = " + pjp);
-        }
-
-        EtmPoint point = null;
-		SLAValues sla = null;
-        
-        try {
-            // TODO: use cache!
-			sla = getSLAUncachedFromClass(pjp);
-			point = etmMonitor.createPoint(sla.name);
-		} catch (RuntimeException e) {
-			logger.warn("Caught exception within AOP advice measurement code",
-					e);
-			// yes, eat exception to avoid causing errors in the "real" system
-		}
-
-		try {
-			return pjp.proceed();
-		} finally {
-            collectPoint(point, sla);
-        }
 	}
 
     protected void collectPoint(EtmPoint point, SLAValues sla) {
@@ -215,10 +190,16 @@ public class MeasurementAspect implements InitializingBean {
 						.getSignature().getDeclaringType(), method));
 			}
 		}
+        
+        if (slaValues == null) {
+            logger.debug("no method level annotation found - trying class ...");
+            slaValues = getSLAUncachedFromClass(pjp);
+        }
 
 		if (slaValues == null) {
 			logger.error("FAILED to locate @SLA annotation for join "
-					+ "point method -  join point: " + pjpName);
+					+ "point method (checked method and class) "
+                    + "- join point: " + pjpName);
 		} else if (slaValues.warnMs > slaValues.errorMs) {
 			logger.warn("@SLA with warning time > error time at join point "
 					+ pjpName);
@@ -227,24 +208,7 @@ public class MeasurementAspect implements InitializingBean {
 		return slaValues;
 	}
 
-    // TODO: unifiy with getSLA
-    protected SLAValues getSLAFromClass(ProceedingJoinPoint pjp) {
-		try {
-            // FIXME: calls clousure defined in cache ...
-			return cache.compute(pjp);
-		} catch (InterruptedException e) {
-			logger.info("interrupted while searching SLA annotation for "
-					+ "join point", e);
-			return getSLAUncachedFromClass(pjp);
-		}
-	}
-
-    // TODO: unifiy with getSLAUncached!
     protected SLAValues getSLAUncachedFromClass(ProceedingJoinPoint pjp) {
-        final String pjpName = pjp.toLongString();
-        if (logger.isDebugEnabled()) {
-            logger.debug("getSLAUncachedFromClass(" + pjpName + ")");
-        }
 
         final Class<?> clazz = pjp.getSignature().getDeclaringType();
         if (logger.isDebugEnabled()) {
@@ -258,14 +222,6 @@ public class MeasurementAspect implements InitializingBean {
                 String pointName = mkPointName(clazz, getTargetMethod(pjp));
                 slaValues = getSLAValues((SLA) a, pointName);
             }
-        }
-
-        if (slaValues == null) {
-            logger.error("FAILED to locate class level @SLA annotation for join "
-                    + "point method -  join point: " + pjpName);
-        } else if (slaValues.warnMs > slaValues.errorMs) {
-            logger.warn("@SLA with warning time > error time at join point "
-                    + pjpName);
         }
 
         return slaValues;
@@ -316,13 +272,11 @@ public class MeasurementAspect implements InitializingBean {
 		}
 	}
 
-	// used for unit testing
+	// used for unit testing as well
 	protected void checkSLA(double warnMs, double errorMs, String name,
 			double timeMs) {
-		/*
-		 * // opt.: quick return for default case if (timeMs < warnMs) { return;
-		 * } else
-		 */
+
+		// opt.: quick return for default case if (timeMs < warnMs) { return;} else
 		if (timeMs >= errorMs) {
 			logger.error(String.format("@SLA.error %.1fms >= %.1fms - in: %s",
 					timeMs, errorMs, name));
