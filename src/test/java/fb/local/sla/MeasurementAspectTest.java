@@ -16,31 +16,10 @@ import javax.annotation.Resource;
 import static org.junit.Assert.assertEquals;
 
 /** unit test some aspect methods */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "testSLAContext.xml" })
-public class MeasurementAspectTest {
-    	/** Minimum accuracy (or delta) for double operations */
+public class MeasurementAspectTest extends MeasurementTest {
+
+    /** Minimum accuracy (or delta) for double operations */
 	private static final double MIN_ACC = 0.00001d;
-
-	@Resource
-	protected MeasurementAspect measurementAspect;
-
-	protected EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
-
-    @Before
-	public void setUp() throws Exception {
-		//etmMonitor.start();
-		measurementAspect.reset();
-		assertEquals(0, measurementAspect.getErrors());
-		assertEquals(0, measurementAspect.getWarnings());
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		etmMonitor.render(new SimpleTextRenderer());
-		//etmMonitor.stop();
-		etmMonitor.reset();
-	}
 
 	/**
 	 * just to make sure we do not get to inaccurate when converting times.

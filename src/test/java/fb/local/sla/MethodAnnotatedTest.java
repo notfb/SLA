@@ -18,17 +18,10 @@ import etm.core.renderer.SimpleTextRenderer;
 /**
  * Only tests SLA annotated methods.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "testSLAContext.xml" })
-public class MethodAnnotatedTest {
-
-	@Resource
-	protected MeasurementAspect measurementAspect;
+public class MethodAnnotatedTest extends MeasurementTest {
 
 	@Resource
 	protected MethodAnnotatedBean methodAnnotatedBean;
-
-	protected EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
 
     @Before
 	public void setUp() throws Exception {
