@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 @SLA(error=200, warn=100, unit= TimeUnit.MILLISECONDS)
 public class ClassAnnotatedBean {
 
-    public void ok() throws InterruptedException {
-		Thread.sleep(140);
+    public void ok() {
+		// do nothing
 	}
 
 	public void warn() throws InterruptedException {

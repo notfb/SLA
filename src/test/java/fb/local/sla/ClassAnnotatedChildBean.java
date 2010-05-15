@@ -22,7 +22,7 @@ public class ClassAnnotatedChildBean extends ClassAnnotatedBean {
 	}
 
     @Override
-    public void ok() throws InterruptedException {
+    public void ok() {
 		// do nothing
 	}
 

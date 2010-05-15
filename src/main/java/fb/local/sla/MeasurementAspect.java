@@ -158,6 +158,13 @@ public class MeasurementAspect implements InitializingBean {
 
 	}
 
+//    @Around("@annotation(SLA)")
+//	public Object monitorClass(ProceedingJoinPoint pjp) throws Throwable {
+//        logger.debug("monitorClass pjp= " + pjp);
+//
+//        return null;
+//	}
+
 	protected SLAValues getSLA(ProceedingJoinPoint pjp) {
 		try {
 			return cache.compute(pjp);
