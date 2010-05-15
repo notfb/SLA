@@ -38,10 +38,11 @@ import etm.core.monitor.EtmPoint;
  * </p>
  * 
  * <pre>
- * TODO: when and where to call etmMonitor.start()/stop()
  * TODO: class lvl annotation
  * TODO: aop xml config, hot deploy new spring context?
  * </pre>
+ *
+ * @see fb.local.sla.SLA
  */
 @Aspect
 @ThreadSafe

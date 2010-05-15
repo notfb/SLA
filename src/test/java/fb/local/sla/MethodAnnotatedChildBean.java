@@ -25,4 +25,11 @@ public class MethodAnnotatedChildBean extends MethodAnnotatedBean {
     public void childMethodNoSla() throws InterruptedException {
 	    // do nothing
 	}
+
+    // no annotation here! -> no SLA
+    @Override
+    public int warn() throws InterruptedException {
+         Thread.sleep(200);
+         return 23;
+    }
 }

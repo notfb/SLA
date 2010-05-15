@@ -20,13 +20,56 @@ public class MethodAnnotatedChildTest extends MethodAnnotatedTest {
 	protected MethodAnnotatedChildBean monitoredBean;
 
     @Test
-	public void test() throws InterruptedException {
+	public void testChildMethodWarn() throws InterruptedException {
 		assertEquals(0, measurementAspect.getErrors());
 		assertEquals(0, measurementAspect.getWarnings());
 
 		monitoredBean.childMethodWarn();
 		assertEquals(0, measurementAspect.getErrors());
 		assertEquals(1, measurementAspect.getWarnings());
+	}
+
+    @Test
+	public void testChildMethodError() throws InterruptedException {
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+
+		monitoredBean.childMethodError();
+		assertEquals(1, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+	}
+
+    @Test
+	public void testChildMethodOk() throws InterruptedException {
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+
+		monitoredBean.childMethodOk();
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+	}
+
+    @Test
+	public void testChildMethodNoSla() throws InterruptedException {
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+
+		monitoredBean.childMethodNoSla();
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+	}
+
+    @Test
+	public void testOverriddenWarn() throws InterruptedException {
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
+
+        // make sure we called the correct method
+		assertEquals(23, monitoredBean.warn());
+
+        // no warning since overridden method not annotated
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
 	}
 
 }
