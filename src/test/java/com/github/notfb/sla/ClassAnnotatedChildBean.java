@@ -1,6 +1,4 @@
-package fb.local.sla;
-
-import java.util.concurrent.TimeUnit;
+package com.github.notfb.sla;
 
 /**
  * Simple bean for testing of class level annotation by extending an annotated class.

@@ -1,4 +1,4 @@
-package fb.local.sla;
+package com.github.notfb.sla;
 
 import java.util.concurrent.TimeUnit;
 

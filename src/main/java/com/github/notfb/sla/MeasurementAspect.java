@@ -1,4 +1,4 @@
-package fb.local.sla;
+package com.github.notfb.sla;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -43,7 +43,7 @@ import etm.core.monitor.EtmPoint;
  * TODO: aop xml config, hot deploy new spring context?
  * </pre>
  *
- * @see fb.local.sla.SLA
+ * @see com.github.notfb.sla.SLA
  */
 @Aspect
 @ThreadSafe

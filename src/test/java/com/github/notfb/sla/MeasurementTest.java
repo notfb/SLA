@@ -1,4 +1,4 @@
-package fb.local.sla;
+package com.github.notfb.sla;
 
 import etm.core.configuration.EtmManager;
 import etm.core.monitor.EtmMonitor;

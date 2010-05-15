@@ -1,14 +1,10 @@
-package fb.local.sla;
+package com.github.notfb.sla;
 
 import static org.junit.Assert.assertEquals;
 
 import javax.annotation.Resource;
 
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Unit test for class annotated subclassed bean.

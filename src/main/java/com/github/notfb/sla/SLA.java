@@ -1,4 +1,4 @@
-package fb.local.sla;
+package com.github.notfb.sla;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Why? To keep it simple. I dislike stepping through complex class hierarchies just to figure out what SLA is used.
  * (If you have a different point of view, feel free to tell me.)
  *
- * @see fb.local.sla.MeasurementAspect 
+ * @see com.github.notfb.sla.MeasurementAspect
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

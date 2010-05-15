@@ -1,9 +1,6 @@
-package fb.local.sla;
+package com.github.notfb.sla;
 
-import etm.core.renderer.SimpleTextRenderer;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.annotation.Resource;

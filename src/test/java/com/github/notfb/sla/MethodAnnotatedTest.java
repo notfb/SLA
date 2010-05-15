@@ -1,14 +1,10 @@
-package fb.local.sla;
+package com.github.notfb.sla;
 
 import static org.junit.Assert.assertEquals;
 
 import javax.annotation.Resource;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-
-import etm.core.renderer.SimpleTextRenderer;
 
 /**
  * Only tests SLA annotated methods.
