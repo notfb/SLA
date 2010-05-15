@@ -7,12 +7,7 @@ import javax.annotation.Resource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import etm.core.configuration.EtmManager;
-import etm.core.monitor.EtmMonitor;
 import etm.core.renderer.SimpleTextRenderer;
 
 /**
@@ -20,8 +15,8 @@ import etm.core.renderer.SimpleTextRenderer;
  */
 public class MethodAnnotatedTest extends MeasurementTest {
 
-	@Resource
-	protected MethodAnnotatedBean methodAnnotatedBean;
+	@Resource(name = "methodAnnotatedBean")
+	protected MethodAnnotatedBean monitoredBean;
 
     @Before
 	public void setUp() throws Exception {
@@ -38,38 +33,38 @@ public class MethodAnnotatedTest extends MeasurementTest {
 
 	@Test
 	public void testOk() {
-		methodAnnotatedBean.ok();
+		monitoredBean.ok();
 		assertEquals(0, measurementAspect.getErrors());
 		assertEquals(0, measurementAspect.getWarnings());
 	}
 
 	@Test
 	public void testWarn() throws InterruptedException {
-		methodAnnotatedBean.warn();
+		monitoredBean.warn();
 		assertEquals(0, measurementAspect.getErrors());
 		assertEquals(1, measurementAspect.getWarnings());
 
-		methodAnnotatedBean.warn();
+		monitoredBean.warn();
 		assertEquals(0, measurementAspect.getErrors());
 		assertEquals(2, measurementAspect.getWarnings());
 	}
 
 	@Test
 	public void testError() throws InterruptedException {
-		methodAnnotatedBean.error("foo");
+		monitoredBean.error("foo");
 		assertEquals(0, measurementAspect.getWarnings());
 		assertEquals(1, measurementAspect.getErrors());
 
-		methodAnnotatedBean.error("foo");
+		monitoredBean.error("foo");
 		assertEquals(0, measurementAspect.getWarnings());
 		assertEquals(2, measurementAspect.getErrors());
 
 		// check if AOP and reflection code is working
-		methodAnnotatedBean.error("foo", new Integer(2));
+		monitoredBean.error("foo", new Integer(2));
 		assertEquals(0, measurementAspect.getWarnings());
 		assertEquals(3, measurementAspect.getErrors());
 
-		methodAnnotatedBean.error("foo", 0);
+		monitoredBean.error("foo", 0);
 		assertEquals(0, measurementAspect.getWarnings());
 		assertEquals(4, measurementAspect.getErrors());
 	}

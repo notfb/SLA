@@ -10,18 +10,21 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-/** unit test for class annotated subclassed bean */
-public class MethodAnnotatedChildTest extends MeasurementTest {
+/**
+ * Unit test for class annotated subclassed bean.
+ * Extends MethodAnnotatedTest since all test methods should pass as well for the subclass.
+ */
+public class MethodAnnotatedChildTest extends MethodAnnotatedTest {
 
-	@Resource
-	private MethodAnnotatedChildBean methodAnnotatedChildBean;
+	@Resource(name = "methodAnnotatedChildBean")
+	protected MethodAnnotatedChildBean monitoredBean;
 
     @Test
 	public void test() throws InterruptedException {
 		assertEquals(0, measurementAspect.getErrors());
 		assertEquals(0, measurementAspect.getWarnings());
 
-		methodAnnotatedChildBean.childMethodWarn();
+		monitoredBean.childMethodWarn();
 		assertEquals(0, measurementAspect.getErrors());
 		assertEquals(1, measurementAspect.getWarnings());
 	}
