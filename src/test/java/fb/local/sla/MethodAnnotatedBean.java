@@ -3,9 +3,9 @@ package fb.local.sla;
 import java.util.concurrent.TimeUnit;
 
 /**
- * simple bean for testing ...
+ * Simple bean for testing method annotations...
  */
-public class AnnotatedBean {
+public class MethodAnnotatedBean {
 
 	@SLA(error=200, warn=100, unit=TimeUnit.MILLISECONDS)
 	public void ok() {

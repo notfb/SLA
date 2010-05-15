@@ -3,20 +3,20 @@ package fb.local.sla;
 import java.util.concurrent.TimeUnit;
 
 /**
- * simple bean for testing of class level annotation.
+ * Simple Bean to test class annotations
  */
-@SLA(error=200, warn=100, unit=TimeUnit.MILLISECONDS)
-public class ClassAnnotatedBean extends AnnotatedBean {
+@SLA(error=200, warn=100, unit= TimeUnit.MILLISECONDS)
+public class ClassAnnotatedBean {
 
-    public void childMethodOk() throws InterruptedException {
+    public void ok() throws InterruptedException {
 		Thread.sleep(140);
 	}
 
-	public void childMethodWarn() throws InterruptedException {
+	public void warn() throws InterruptedException {
 		Thread.sleep(140);
 	}
 
-    public void childMethodError() throws InterruptedException {
+    public void error() throws InterruptedException {
 		Thread.sleep(250);
 	}
 }

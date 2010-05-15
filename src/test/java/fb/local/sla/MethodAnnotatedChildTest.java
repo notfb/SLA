@@ -12,20 +12,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/testSlaContext.xml" })
-@Ignore
-public class MeasurementAspectClassTest extends MeasurementAspectMethodTest {
+@Ignore("TODO: impl")
+public class MethodAnnotatedChildTest extends MethodAnnotatedTest {
 
 	@Resource
-	private ClassAnnotatedBean classAnnotatedBean;
+	private MethodAnnotatedChildBean methodAnnotatedChildBean;
 
-	@Test
+    @Test
 	public void test() throws InterruptedException {
-		assertEquals(0, slaMonitorBean.getErrors());
-		assertEquals(0, slaMonitorBean.getWarnings());
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(0, measurementAspect.getWarnings());
 
-		classAnnotatedBean.childMethodWarn();
-		assertEquals(0, slaMonitorBean.getErrors());
-		assertEquals(1, slaMonitorBean.getWarnings());
+		methodAnnotatedChildBean.childMethodWarn();
+		assertEquals(0, measurementAspect.getErrors());
+		assertEquals(1, measurementAspect.getWarnings());
 	}
 
 }
